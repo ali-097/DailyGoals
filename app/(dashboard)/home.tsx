@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { supabase } from "../lib/supabase";
 import { Goal } from "../types/goal";
+import { formatDate } from "../util/utilfuncs";
 
 interface Goals extends Goal {
 	id: number;
@@ -24,7 +25,6 @@ const goals = () => {
 				.select("*")
 				.order("created_at", { ascending: false });
 			const goalsData = res.data;
-			console.log(goalsData, "goals");
 			if (goalsData) {
 				setGoalList(
 					goalsData.map(({ created_at, user_id, ...rest }) => rest)
@@ -65,14 +65,16 @@ const goals = () => {
 							<Text style={styles.cardPriority}>
 								Priority: {item.priority}
 							</Text>
-							<Text>Deadline: {item.deadline.toString()}</Text>
+							<Text>
+								Deadline: {formatDate(new Date(item.deadline))}
+							</Text>
 						</View>
 
 						<View style={styles.buttonRow}>
 							<Link
 								href={{
 									pathname: "/(forms)/addgoal",
-									params: { id: item.id.toString() },
+									params: { id: item.id },
 								}}
 								asChild
 							>

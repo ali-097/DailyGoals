@@ -1,6 +1,6 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { router } from "expo-router";
-import { useState } from "react";
+import { router, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
 import {
 	Modal,
 	StyleSheet,
@@ -12,7 +12,16 @@ import {
 import { supabase } from "../lib/supabase";
 import { Goal } from "../types/goal";
 
+const formatDate = (date: Date): string => {
+	return date.toLocaleString("en-US", {
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+};
+
 const addgoal = () => {
+	const { id } = useLocalSearchParams();
 	const [formData, setFormData] = useState<Goal>({
 		title: "",
 		description: "",
@@ -48,24 +57,64 @@ const addgoal = () => {
 	};
 
 	const handleGoalSubmit = async () => {
-		console.log("New Goal Created:", formData);
 		const user = await supabase.auth.getUser();
-		console.log(user.data.user?.id, "user");
-		const { data, error } = await supabase.from("goals").insert([
-			{
-				title: formData.title,
-				description: formData.description,
-				deadline: formData.deadline.toISOString(),
-				priority: formData.priority,
-				user_id: user.data.user?.id,
-			},
-		]);
+		let error;
+
+		if (id) {
+			const { error: updateError } = await supabase
+				.from("goals")
+				.update({
+					title: formData.title,
+					description: formData.description,
+					deadline: formData.deadline.toISOString(),
+					priority: formData.priority,
+				})
+				.eq("id", id);
+			error = updateError;
+		} else {
+			const { error: insertError } = await supabase.from("goals").insert([
+				{
+					title: formData.title,
+					description: formData.description,
+					deadline: formData.deadline.toISOString(),
+					priority: formData.priority,
+					user_id: user.data.user?.id,
+				},
+			]);
+			error = insertError;
+		}
+
 		if (error) {
-			console.log("Error creating goal:", error.message);
+			console.log("Error handling goal:", error.message);
 			return;
 		}
 		router.push("/(dashboard)/home");
 	};
+
+	useEffect(() => {
+		const fetchGoal = async (id: number) => {
+			const { data, error } = await supabase
+				.from("goals")
+				.select("*")
+				.eq("id", id)
+				.single();
+			if (error) {
+				console.log("Error fetching goal:", error.message);
+				return;
+			}
+			if (data) {
+				setFormData({
+					title: data.title,
+					description: data.description,
+					deadline: new Date(data.deadline),
+					priority: data.priority,
+				});
+			}
+		};
+		if (id) {
+			fetchGoal(Number(id));
+		}
+	}, [id]);
 
 	return (
 		<View style={styles.container}>
@@ -105,7 +154,7 @@ const addgoal = () => {
 						onPress={() => setShowDatePicker(true)}
 					>
 						<Text style={styles.dateText}>
-							{formData.deadline.toLocaleDateString()}
+							{formatDate(formData.deadline)}
 						</Text>
 					</TouchableOpacity>
 					{showDatePicker && (
@@ -152,8 +201,14 @@ const addgoal = () => {
 						style={styles.submitButtonText}
 						onPress={handleGoalSubmit}
 					>
-						Create Goal
+						{id ? "Update Goal" : "Add Goal"}
 					</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.cancelButton}
+					onPress={() => router.push("/(dashboard)/home")}
+				>
+					<Text style={styles.cancelText}>Cancel</Text>
 				</TouchableOpacity>
 
 				<Modal
@@ -236,6 +291,7 @@ export default addgoal;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		paddingVertical: 30,
 		backgroundColor: "#f5f5f5",
 	},
 	formContainer: {

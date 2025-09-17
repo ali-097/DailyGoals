@@ -7,11 +7,20 @@ import { supabase } from "./lib/supabase";
 export default function Index() {
 	useEffect(() => {
 		const checkAuth = async () => {
-			const isLoggedIn = await supabase.auth.getUser();
-			if (isLoggedIn) {
-				router.push("/(dashboard)/home");
+			try {
+				const {
+					data: { user },
+					error,
+				} = await supabase.auth.getUser();
+				if (user && !error) {
+					router.push("/(dashboard)/home");
+				}
+			} catch (error) {
+				console.log("Auth check error:", error);
 			}
 		};
+
+		checkAuth();
 	}, []);
 	return (
 		<View style={styles.container}>
