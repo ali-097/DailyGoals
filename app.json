@@ -8,6 +8,11 @@
     "scheme": "dailygoals",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/partial-react-logo.png",
+      "backgroundColor": "#ffffff",
+      "resizeMode": "contain"
+    },
     "ios": {
       "supportsTablet": true
     },
