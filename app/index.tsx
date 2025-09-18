@@ -1,7 +1,12 @@
-import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useEffect } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet } from "react-native";
+import {
+	ThemedIcon,
+	ThemedText,
+	ThemedTouchableOpacity,
+	ThemedView,
+} from "./components";
 import { supabase } from "./lib/supabase";
 
 export default function Index() {
@@ -22,38 +27,64 @@ export default function Index() {
 
 		checkAuth();
 	}, []);
-	return (
-		<View style={styles.container}>
-			<Text style={styles.heading}>Daily Goals Tracker</Text>
 
-			<View style={styles.buttonContainer}>
-				<TouchableOpacity
+	return (
+		<ThemedView variant="background" style={styles.container}>
+			<ThemedText
+				variant="primary"
+				size="xxxl"
+				weight="bold"
+				style={styles.heading}
+			>
+				Daily Goals Tracker
+			</ThemedText>
+
+			<ThemedView style={styles.buttonContainer}>
+				<ThemedTouchableOpacity
+					variant="primary"
+					size="lg"
 					style={styles.button}
 					onPress={() => router.push("/(auth)/login")}
 				>
-					<Ionicons
+					<ThemedIcon
 						name="lock-closed"
 						size={20}
-						color="#fff"
+						color="text"
 						style={styles.icon}
 					/>
-					<Text style={styles.buttonText}>Login</Text>
-				</TouchableOpacity>
+					<ThemedText
+						variant="primary"
+						size="lg"
+						weight="semibold"
+						style={styles.buttonText}
+					>
+						Login
+					</ThemedText>
+				</ThemedTouchableOpacity>
 
-				<TouchableOpacity
+				<ThemedTouchableOpacity
+					variant="secondary"
+					size="lg"
 					style={styles.button}
 					onPress={() => router.push("/(auth)/register")}
 				>
-					<Ionicons
+					<ThemedIcon
 						name="person-add"
 						size={20}
-						color="#fff"
+						color="text"
 						style={styles.icon}
 					/>
-					<Text style={styles.buttonText}>Sign Up</Text>
-				</TouchableOpacity>
-			</View>
-		</View>
+					<ThemedText
+						variant="primary"
+						size="lg"
+						weight="semibold"
+						style={styles.buttonText}
+					>
+						Sign Up
+					</ThemedText>
+				</ThemedTouchableOpacity>
+			</ThemedView>
+		</ThemedView>
 	);
 }
 
@@ -62,13 +93,9 @@ const styles = StyleSheet.create({
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
-		backgroundColor: "#f0f4f8",
 		padding: 20,
 	},
 	heading: {
-		fontSize: 32,
-		fontWeight: "800",
-		color: "#0a7ea4",
 		marginBottom: 40,
 		textAlign: "center",
 		textTransform: "uppercase",
@@ -80,27 +107,16 @@ const styles = StyleSheet.create({
 		marginTop: 30,
 	},
 	button: {
-		backgroundColor: "#0a7ea4",
-		borderRadius: 10,
-		paddingVertical: 16,
-		paddingHorizontal: 30,
 		marginBottom: 20,
 		width: "80%",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.15,
-		shadowRadius: 4,
-		elevation: 5,
 	},
 	icon: {
 		marginRight: 10,
 	},
 	buttonText: {
-		color: "#fff",
-		fontSize: 18,
-		fontWeight: "bold",
+		textAlign: "center",
 	},
 });

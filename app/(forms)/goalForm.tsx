@@ -1,14 +1,13 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
+import { Modal, StyleSheet } from "react-native";
 import {
-	Modal,
-	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-} from "react-native";
+	ThemedText,
+	ThemedTextInput,
+	ThemedTouchableOpacity,
+	ThemedView,
+} from "../components";
 import { supabase } from "../lib/supabase";
 import { Goal } from "../types/goal";
 
@@ -116,46 +115,46 @@ const goalForm = () => {
 	}, [id]);
 
 	return (
-		<View style={styles.container}>
-			<View style={styles.formContainer}>
-				<View style={styles.inputContainer}>
-					<Text style={styles.label}>Goal Title</Text>
-					<TextInput
+		<ThemedView style={styles.container}>
+			<ThemedView style={styles.formContainer}>
+				<ThemedView style={styles.inputContainer}>
+					<ThemedText style={styles.label}>Goal Title</ThemedText>
+					<ThemedTextInput
 						style={styles.input}
 						placeholder="Enter your goal"
 						value={formData.title}
-						onChangeText={(text) =>
+						onChangeText={(text: string) =>
 							setFormData({ ...formData, title: text })
 						}
 						placeholderTextColor="#999"
 					/>
-				</View>
+				</ThemedView>
 
-				<View style={styles.inputContainer}>
-					<Text style={styles.label}>Description</Text>
-					<TextInput
+				<ThemedView style={styles.inputContainer}>
+					<ThemedText style={styles.label}>Description</ThemedText>
+					<ThemedTextInput
 						style={[styles.input, styles.textArea]}
 						placeholder="Describe your goal"
 						value={formData.description}
-						onChangeText={(text) =>
+						onChangeText={(text: string) =>
 							setFormData({ ...formData, description: text })
 						}
 						multiline={true}
 						numberOfLines={4}
 						placeholderTextColor="#999"
 					/>
-				</View>
+				</ThemedView>
 
-				<View style={styles.inputContainer}>
-					<Text style={styles.label}>Deadline</Text>
-					<TouchableOpacity
+				<ThemedView style={styles.inputContainer}>
+					<ThemedText style={styles.label}>Deadline</ThemedText>
+					<ThemedTouchableOpacity
 						style={styles.dateButton}
 						onPress={() => setShowDatePicker(true)}
 					>
-						<Text style={styles.dateText}>
+						<ThemedText style={styles.dateText}>
 							{formatDate(formData.deadline)}
-						</Text>
-					</TouchableOpacity>
+						</ThemedText>
+					</ThemedTouchableOpacity>
 					{showDatePicker && (
 						<DateTimePicker
 							value={formData.deadline}
@@ -165,11 +164,11 @@ const goalForm = () => {
 							onChange={handleDate}
 						/>
 					)}
-				</View>
+				</ThemedView>
 
-				<View style={styles.inputContainer}>
-					<Text style={styles.label}>Priority</Text>
-					<TouchableOpacity
+				<ThemedView style={styles.inputContainer}>
+					<ThemedText style={styles.label}>Priority</ThemedText>
+					<ThemedTouchableOpacity
 						style={[
 							styles.prioritySelector,
 							{
@@ -180,7 +179,7 @@ const goalForm = () => {
 						]}
 						onPress={() => setShowPriorityModal(true)}
 					>
-						<View
+						<ThemedView
 							style={[
 								styles.priorityDot,
 								{
@@ -190,26 +189,26 @@ const goalForm = () => {
 								},
 							]}
 						/>
-						<Text style={styles.priorityButtonText}>
+						<ThemedText style={styles.priorityButtonText}>
 							{priorityLabels[formData.priority]}
-						</Text>
-					</TouchableOpacity>
-				</View>
+						</ThemedText>
+					</ThemedTouchableOpacity>
+				</ThemedView>
 
-				<TouchableOpacity style={styles.submitButton}>
-					<Text
+				<ThemedTouchableOpacity style={styles.submitButton}>
+					<ThemedText
 						style={styles.submitButtonText}
 						onPress={handleGoalSubmit}
 					>
 						{id ? "Update Goal" : "Add Goal"}
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
+					</ThemedText>
+				</ThemedTouchableOpacity>
+				<ThemedTouchableOpacity
 					style={styles.cancelButton}
 					onPress={() => router.push("/(dashboard)/home")}
 				>
-					<Text style={styles.cancelText}>Cancel</Text>
-				</TouchableOpacity>
+					<ThemedText style={styles.cancelText}>Cancel</ThemedText>
+				</ThemedTouchableOpacity>
 
 				<Modal
 					animationType="slide"
@@ -217,13 +216,13 @@ const goalForm = () => {
 					visible={showPriorityModal}
 					onRequestClose={() => setShowPriorityModal(false)}
 				>
-					<View style={styles.modalContainer}>
-						<View style={styles.modalContent}>
-							<Text style={styles.modalTitle}>
+					<ThemedView style={styles.modalContainer}>
+						<ThemedView style={styles.modalContent}>
+							<ThemedText style={styles.modalTitle}>
 								Select Priority
-							</Text>
+							</ThemedText>
 							{priorities.map((priority) => (
-								<TouchableOpacity
+								<ThemedTouchableOpacity
 									key={priority}
 									style={[
 										styles.priorityButton,
@@ -249,7 +248,7 @@ const goalForm = () => {
 										setShowPriorityModal(false);
 									}}
 								>
-									<View
+									<ThemedView
 										style={[
 											styles.priorityDot,
 											{
@@ -258,7 +257,7 @@ const goalForm = () => {
 											},
 										]}
 									/>
-									<Text
+									<ThemedText
 										style={[
 											styles.priorityText,
 											{
@@ -269,20 +268,22 @@ const goalForm = () => {
 										]}
 									>
 										{priorityLabels[priority]}
-									</Text>
-								</TouchableOpacity>
+									</ThemedText>
+								</ThemedTouchableOpacity>
 							))}
-							<TouchableOpacity
+							<ThemedTouchableOpacity
 								style={styles.cancelButton}
 								onPress={() => setShowPriorityModal(false)}
 							>
-								<Text style={styles.cancelText}>Cancel</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
+								<ThemedText style={styles.cancelText}>
+									Cancel
+								</ThemedText>
+							</ThemedTouchableOpacity>
+						</ThemedView>
+					</ThemedView>
 				</Modal>
-			</View>
-		</View>
+			</ThemedView>
+		</ThemedView>
 	);
 };
 
@@ -292,7 +293,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		paddingVertical: 30,
-		backgroundColor: "#f5f5f5",
 	},
 	formContainer: {
 		padding: 20,
@@ -304,25 +304,19 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "600",
 		marginBottom: 8,
-		color: "#333",
 	},
 	input: {
-		backgroundColor: "#fff",
 		borderWidth: 1,
-		borderColor: "#ddd",
 		borderRadius: 8,
 		padding: 12,
 		fontSize: 16,
-		color: "#333",
 	},
 	textArea: {
 		height: 100,
 		textAlignVertical: "top",
 	},
 	dateButton: {
-		backgroundColor: "#fff",
 		borderWidth: 1,
-		borderColor: "#ddd",
 		borderRadius: 8,
 		padding: 12,
 		flexDirection: "row",
@@ -330,10 +324,8 @@ const styles = StyleSheet.create({
 	},
 	dateText: {
 		fontSize: 16,
-		color: "#333",
 	},
 	prioritySelector: {
-		backgroundColor: "#fff",
 		borderWidth: 1,
 		borderRadius: 8,
 		padding: 12,
@@ -348,17 +340,14 @@ const styles = StyleSheet.create({
 	},
 	priorityButtonText: {
 		fontSize: 16,
-		color: "#333",
 	},
 	submitButton: {
-		backgroundColor: "#0a7ea4",
 		borderRadius: 8,
 		padding: 16,
 		alignItems: "center",
 		marginTop: 30,
 	},
 	submitButtonText: {
-		color: "#fff",
 		fontSize: 18,
 		fontWeight: "bold",
 	},
@@ -368,7 +357,6 @@ const styles = StyleSheet.create({
 		backgroundColor: "rgba(0, 0, 0, 0.5)",
 	},
 	modalContent: {
-		backgroundColor: "#fff",
 		padding: 20,
 		borderTopLeftRadius: 20,
 		borderTopRightRadius: 20,
@@ -378,7 +366,6 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		marginBottom: 15,
 		textAlign: "center",
-		color: "#333",
 	},
 	priorityButton: {
 		flexDirection: "row",
@@ -397,14 +384,11 @@ const styles = StyleSheet.create({
 		marginTop: 15,
 		padding: 15,
 		borderRadius: 8,
-		backgroundColor: "#f8f8f8",
 		borderWidth: 1,
-		borderColor: "#ddd",
 	},
 	cancelText: {
 		fontSize: 16,
 		textAlign: "center",
-		color: "#666",
 		fontWeight: "600",
 	},
 });

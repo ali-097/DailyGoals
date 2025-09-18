@@ -5,11 +5,14 @@ import {
 	Platform,
 	ScrollView,
 	StyleSheet,
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
 } from "react-native";
+import {
+	ThemedText,
+	ThemedTextInput,
+	ThemedTouchableOpacity,
+	ThemedView,
+} from "../components";
+import { useTheme } from "../context/themeContext";
 import { supabase } from "../lib/supabase";
 
 interface RegisterForm {
@@ -20,6 +23,7 @@ interface RegisterForm {
 }
 
 const Register = () => {
+	const { isDark } = useTheme();
 	const [formData, setFormData] = useState<RegisterForm>({
 		username: "",
 		email: "",
@@ -83,45 +87,48 @@ const Register = () => {
 
 	return (
 		<KeyboardAvoidingView
-			style={styles.container}
+			style={[
+				styles.container,
+				{ backgroundColor: isDark ? "#000" : "#fff" },
+			]}
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 		>
 			<ScrollView contentContainerStyle={styles.scrollContainer}>
-				<View style={styles.formContainer}>
-					<Text style={styles.title}>Create Account</Text>
+				<ThemedView style={styles.formContainer}>
+					<ThemedText style={styles.title}>Create Account</ThemedText>
 
-					<View style={styles.inputContainer}>
-						<Text style={styles.label}>Username</Text>
-						<TextInput
+					<ThemedView style={styles.inputContainer}>
+						<ThemedText style={styles.label}>Username</ThemedText>
+						<ThemedTextInput
 							style={[
 								styles.input,
 								errors.username && styles.inputError,
 							]}
 							placeholder="Enter your username"
 							value={formData.username}
-							onChangeText={(text) =>
+							onChangeText={(text: string) =>
 								setFormData({ ...formData, username: text })
 							}
 							autoCapitalize="none"
 							placeholderTextColor="#999"
 						/>
 						{errors.username && (
-							<Text style={styles.errorText}>
+							<ThemedText style={styles.errorText}>
 								{errors.username}
-							</Text>
+							</ThemedText>
 						)}
-					</View>
+					</ThemedView>
 
-					<View style={styles.inputContainer}>
-						<Text style={styles.label}>Email</Text>
-						<TextInput
+					<ThemedView style={styles.inputContainer}>
+						<ThemedText style={styles.label}>Email</ThemedText>
+						<ThemedTextInput
 							style={[
 								styles.input,
 								errors.email && styles.inputError,
 							]}
 							placeholder="Enter your email"
 							value={formData.email}
-							onChangeText={(text) =>
+							onChangeText={(text: string) =>
 								setFormData({ ...formData, email: text })
 							}
 							keyboardType="email-address"
@@ -130,42 +137,46 @@ const Register = () => {
 							placeholderTextColor="#999"
 						/>
 						{errors.email && (
-							<Text style={styles.errorText}>{errors.email}</Text>
+							<ThemedText style={styles.errorText}>
+								{errors.email}
+							</ThemedText>
 						)}
-					</View>
+					</ThemedView>
 
-					<View style={styles.inputContainer}>
-						<Text style={styles.label}>Password</Text>
-						<TextInput
+					<ThemedView style={styles.inputContainer}>
+						<ThemedText style={styles.label}>Password</ThemedText>
+						<ThemedTextInput
 							style={[
 								styles.input,
 								errors.password && styles.inputError,
 							]}
 							placeholder="Enter your password"
 							value={formData.password}
-							onChangeText={(text) =>
+							onChangeText={(text: string) =>
 								setFormData({ ...formData, password: text })
 							}
 							secureTextEntry
 							placeholderTextColor="#999"
 						/>
 						{errors.password && (
-							<Text style={styles.errorText}>
+							<ThemedText style={styles.errorText}>
 								{errors.password}
-							</Text>
+							</ThemedText>
 						)}
-					</View>
+					</ThemedView>
 
-					<View style={styles.inputContainer}>
-						<Text style={styles.label}>Confirm Password</Text>
-						<TextInput
+					<ThemedView style={styles.inputContainer}>
+						<ThemedText style={styles.label}>
+							Confirm Password
+						</ThemedText>
+						<ThemedTextInput
 							style={[
 								styles.input,
 								errors.confirmPassword && styles.inputError,
 							]}
 							placeholder="Confirm your password"
 							value={formData.confirmPassword}
-							onChangeText={(text) =>
+							onChangeText={(text: string) =>
 								setFormData({
 									...formData,
 									confirmPassword: text,
@@ -175,28 +186,30 @@ const Register = () => {
 							placeholderTextColor="#999"
 						/>
 						{errors.confirmPassword && (
-							<Text style={styles.errorText}>
+							<ThemedText style={styles.errorText}>
 								{errors.confirmPassword}
-							</Text>
+							</ThemedText>
 						)}
-					</View>
+					</ThemedView>
 
-					<TouchableOpacity
+					<ThemedTouchableOpacity
 						style={styles.submitButton}
 						onPress={handleSubmit}
 					>
-						<Text style={styles.submitButtonText}>Register</Text>
-					</TouchableOpacity>
+						<ThemedText style={styles.submitButtonText}>
+							Register
+						</ThemedText>
+					</ThemedTouchableOpacity>
 
-					<TouchableOpacity
+					<ThemedTouchableOpacity
 						style={styles.loginLink}
 						onPress={() => router.push("/(auth)/login")}
 					>
-						<Text style={styles.loginLinkText}>
+						<ThemedText style={styles.loginLinkText}>
 							Already have an account? Login here
-						</Text>
-					</TouchableOpacity>
-				</View>
+						</ThemedText>
+					</ThemedTouchableOpacity>
+				</ThemedView>
 			</ScrollView>
 		</KeyboardAvoidingView>
 	);
@@ -207,7 +220,6 @@ export default Register;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: "#f5f5f5",
 	},
 	scrollContainer: {
 		flexGrow: 1,
@@ -216,7 +228,6 @@ const styles = StyleSheet.create({
 	formContainer: {
 		padding: 20,
 		marginHorizontal: 20,
-		backgroundColor: "#fff",
 		borderRadius: 12,
 		shadowColor: "#000",
 		shadowOffset: {
@@ -230,7 +241,6 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 28,
 		fontWeight: "bold",
-		color: "#333",
 		marginBottom: 30,
 		textAlign: "center",
 	},
@@ -241,34 +251,27 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "600",
 		marginBottom: 8,
-		color: "#333",
 	},
 	input: {
-		backgroundColor: "#fff",
 		borderWidth: 1,
-		borderColor: "#ddd",
 		borderRadius: 8,
 		padding: 12,
 		fontSize: 16,
-		color: "#333",
 	},
 	inputError: {
 		borderColor: "#ff3b30",
 	},
 	errorText: {
-		color: "#ff3b30",
 		fontSize: 14,
 		marginTop: 5,
 	},
 	submitButton: {
-		backgroundColor: "#0a7ea4",
 		borderRadius: 8,
 		padding: 16,
 		alignItems: "center",
 		marginTop: 10,
 	},
 	submitButtonText: {
-		color: "#fff",
 		fontSize: 18,
 		fontWeight: "bold",
 	},
@@ -277,7 +280,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	loginLinkText: {
-		color: "#0a7ea4",
 		fontSize: 16,
 	},
 });

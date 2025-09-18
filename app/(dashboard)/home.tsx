@@ -1,13 +1,7 @@
 import { Link } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-	Alert,
-	FlatList,
-	StyleSheet,
-	Text,
-	TouchableOpacity,
-	View,
-} from "react-native";
+import { Alert, FlatList, StyleSheet } from "react-native";
+import { ThemedText, ThemedTouchableOpacity, ThemedView } from "../components";
 import { supabase } from "../lib/supabase";
 import { Goal } from "../types/goal";
 import { formatDate } from "../util/utilfuncs";
@@ -44,11 +38,13 @@ const goals = () => {
 	};
 
 	return (
-		<View style={styles.container}>
+		<ThemedView style={styles.container}>
 			<Link href="/(forms)/goalForm" asChild>
-				<TouchableOpacity style={styles.addButton}>
-					<Text style={styles.addButtonText}>+ Add Goal</Text>
-				</TouchableOpacity>
+				<ThemedTouchableOpacity style={styles.addButton}>
+					<ThemedText style={styles.addButtonText}>
+						+ Add Goal
+					</ThemedText>
+				</ThemedTouchableOpacity>
 			</Link>
 
 			<FlatList
@@ -56,21 +52,23 @@ const goals = () => {
 				keyExtractor={(item) => item.id.toString()}
 				contentContainerStyle={{ paddingBottom: 16 }}
 				renderItem={({ item }) => (
-					<View style={styles.card}>
-						<View style={{ marginBottom: 8 }}>
-							<Text style={styles.cardTitle}>{item.title}</Text>
-							<Text style={styles.cardDescription}>
+					<ThemedView style={styles.card}>
+						<ThemedView style={{ marginBottom: 8 }}>
+							<ThemedText style={styles.cardTitle}>
+								{item.title}
+							</ThemedText>
+							<ThemedText style={styles.cardDescription}>
 								{item.description}
-							</Text>
-							<Text style={styles.cardPriority}>
+							</ThemedText>
+							<ThemedText style={styles.cardPriority}>
 								Priority: {item.priority}
-							</Text>
-							<Text>
+							</ThemedText>
+							<ThemedText>
 								Deadline: {formatDate(new Date(item.deadline))}
-							</Text>
-						</View>
+							</ThemedText>
+						</ThemedView>
 
-						<View style={styles.buttonRow}>
+						<ThemedView style={styles.buttonRow}>
 							<Link
 								href={{
 									pathname: "/(forms)/goalForm",
@@ -78,12 +76,16 @@ const goals = () => {
 								}}
 								asChild
 							>
-								<TouchableOpacity style={styles.editButton}>
-									<Text style={styles.buttonText}>Edit</Text>
-								</TouchableOpacity>
+								<ThemedTouchableOpacity
+									style={styles.editButton}
+								>
+									<ThemedText style={styles.buttonText}>
+										Edit
+									</ThemedText>
+								</ThemedTouchableOpacity>
 							</Link>
 
-							<TouchableOpacity
+							<ThemedTouchableOpacity
 								style={styles.deleteButton}
 								onPress={() =>
 									Alert.alert(
@@ -102,13 +104,15 @@ const goals = () => {
 									)
 								}
 							>
-								<Text style={styles.buttonText}>Delete</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
+								<ThemedText style={styles.buttonText}>
+									Delete
+								</ThemedText>
+							</ThemedTouchableOpacity>
+						</ThemedView>
+					</ThemedView>
 				)}
 			/>
-		</View>
+		</ThemedView>
 	);
 };
 
@@ -119,10 +123,8 @@ const styles = StyleSheet.create({
 		flex: 1,
 		paddingVertical: 70,
 		paddingHorizontal: 30,
-		backgroundColor: "#fff",
 	},
 	addButton: {
-		backgroundColor: "#0a7ea4",
 		paddingVertical: 12,
 		paddingHorizontal: 20,
 		borderRadius: 8,
@@ -130,12 +132,10 @@ const styles = StyleSheet.create({
 		marginBottom: 16,
 	},
 	addButtonText: {
-		color: "#fff",
 		fontSize: 16,
 		fontWeight: "bold",
 	},
 	card: {
-		backgroundColor: "#f8f8f8",
 		borderRadius: 10,
 		padding: 16,
 		marginBottom: 12,
@@ -144,16 +144,13 @@ const styles = StyleSheet.create({
 	cardTitle: {
 		fontSize: 18,
 		fontWeight: "bold",
-		color: "#333",
 	},
 	cardDescription: {
 		fontSize: 14,
-		color: "#555",
 		marginTop: 4,
 	},
 	cardPriority: {
 		marginTop: 6,
-		color: "#888",
 		fontSize: 13,
 	},
 	buttonRow: {
@@ -162,19 +159,16 @@ const styles = StyleSheet.create({
 		marginTop: 12,
 	},
 	editButton: {
-		backgroundColor: "#4CAF50",
 		paddingVertical: 8,
 		paddingHorizontal: 16,
 		borderRadius: 6,
 	},
 	deleteButton: {
-		backgroundColor: "#FF3B30",
 		paddingVertical: 8,
 		paddingHorizontal: 16,
 		borderRadius: 6,
 	},
 	buttonText: {
-		color: "#fff",
 		fontWeight: "bold",
 		fontSize: 14,
 	},
