@@ -45,7 +45,7 @@ const goals = () => {
 
 	return (
 		<View style={styles.container}>
-			<Link href="/(forms)/addgoal" asChild>
+			<Link href="/(forms)/goalForm" asChild>
 				<TouchableOpacity style={styles.addButton}>
 					<Text style={styles.addButtonText}>+ Add Goal</Text>
 				</TouchableOpacity>
@@ -73,7 +73,7 @@ const goals = () => {
 						<View style={styles.buttonRow}>
 							<Link
 								href={{
-									pathname: "/(forms)/addgoal",
+									pathname: "/(forms)/goalForm",
 									params: { id: item.id },
 								}}
 								asChild

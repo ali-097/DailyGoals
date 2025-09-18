@@ -34,11 +34,15 @@ const _layout = () => {
 				}}
 			/>
 			<Tabs.Screen
-				name="profile"
+				name="settings"
 				options={{
-					title: "Profile",
+					title: "Settings",
 					tabBarIcon: ({ color, size }) => (
-						<Ionicons name="person" color={color} size={size} />
+						<Ionicons
+							name="settings-outline"
+							color={color}
+							size={size}
+						/>
 					),
 				}}
 			/>

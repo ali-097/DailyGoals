@@ -20,7 +20,7 @@ const formatDate = (date: Date): string => {
 	});
 };
 
-const addgoal = () => {
+const goalForm = () => {
 	const { id } = useLocalSearchParams();
 	const [formData, setFormData] = useState<Goal>({
 		title: "",
@@ -59,7 +59,6 @@ const addgoal = () => {
 	const handleGoalSubmit = async () => {
 		const user = await supabase.auth.getUser();
 		let error;
-
 		if (id) {
 			const { error: updateError } = await supabase
 				.from("goals")
@@ -162,6 +161,7 @@ const addgoal = () => {
 							value={formData.deadline}
 							mode="date"
 							display="default"
+							minimumDate={new Date()}
 							onChange={handleDate}
 						/>
 					)}
@@ -286,7 +286,7 @@ const addgoal = () => {
 	);
 };
 
-export default addgoal;
+export default goalForm;
 
 const styles = StyleSheet.create({
 	container: {
