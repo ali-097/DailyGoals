@@ -1,20 +1,16 @@
 import { router, Stack } from "expo-router";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 
 const _layout = () => {
+	const isAuthenticated = useAuth();
+
 	useEffect(() => {
-		const checkAuth = async () => {
-			const {
-				data: { user },
-			} = await supabase.auth.getUser();
-			if (user) {
-				router.replace("/(dashboard)/home");
-			}
-		};
-		checkAuth();
-	}, []);
+		if (isAuthenticated === true) {
+			router.replace("/(dashboard)/home");
+		}
+	}, [isAuthenticated]);
 
 	return (
 		<Stack

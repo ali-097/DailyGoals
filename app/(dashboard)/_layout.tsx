@@ -3,22 +3,17 @@ import { router, Tabs } from "expo-router";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/themeContext";
-import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 
 const _layout = () => {
 	const { isDark } = useTheme();
+	const isAuthenticated = useAuth();
 
 	useEffect(() => {
-		const checkAuth = async () => {
-			const {
-				data: { user },
-			} = await supabase.auth.getUser();
-			if (!user) {
-				router.replace("/(auth)/login");
-			}
-		};
-		checkAuth();
-	}, []);
+		if (isAuthenticated === false) {
+			router.replace("/(auth)/login");
+		}
+	}, [isAuthenticated]);
 
 	return (
 		<Tabs

@@ -1,20 +1,16 @@
 import { router, Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { supabase } from "../lib/supabase";
+import { useAuth } from "../hooks/useAuth";
 
 const _layout = () => {
+	const isAuthenticated = useAuth();
+
 	useEffect(() => {
-		const checkAuth = async () => {
-			const {
-				data: { user },
-			} = await supabase.auth.getUser();
-			if (!user) {
-				router.replace("/(auth)/login");
-			}
-		};
-		checkAuth();
-	}, []);
+		if (isAuthenticated === false) {
+			router.replace("/(auth)/login");
+		}
+	}, [isAuthenticated]);
 
 	return (
 		<Stack screenOptions={{ headerShown: false }}>
