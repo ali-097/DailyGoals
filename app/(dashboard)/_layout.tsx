@@ -1,11 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
-import React from "react";
+import { router, Tabs } from "expo-router";
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/themeContext";
+import { supabase } from "../lib/supabase";
 
 const _layout = () => {
 	const { isDark } = useTheme();
+
+	useEffect(() => {
+		const checkAuth = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+			if (!user) {
+				router.replace("/(auth)/login");
+			}
+		};
+		checkAuth();
+	}, []);
+
 	return (
 		<Tabs
 			screenOptions={{

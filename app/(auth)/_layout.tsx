@@ -1,7 +1,21 @@
-import { Stack } from "expo-router";
+import { router, Stack } from "expo-router";
+import { useEffect } from "react";
 import { StyleSheet } from "react-native";
+import { supabase } from "../lib/supabase";
 
 const _layout = () => {
+	useEffect(() => {
+		const checkAuth = async () => {
+			const {
+				data: { user },
+			} = await supabase.auth.getUser();
+			if (user) {
+				router.replace("/(dashboard)/home");
+			}
+		};
+		checkAuth();
+	}, []);
+
 	return (
 		<Stack
 			screenOptions={{
@@ -15,8 +29,14 @@ const _layout = () => {
 				headerTitleAlign: "center",
 			}}
 		>
-			<Stack.Screen name="login" options={{ title: "Login Form" }} />
-			<Stack.Screen name="register" options={{ title: "Signup Form" }} />
+			<Stack.Screen
+				name="login"
+				options={{ title: "Login Form", headerLeft: () => null }}
+			/>
+			<Stack.Screen
+				name="register"
+				options={{ title: "Signup Form", headerLeft: () => null }}
+			/>
 		</Stack>
 	);
 };
