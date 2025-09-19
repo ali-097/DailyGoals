@@ -108,6 +108,21 @@ const goals = () => {
 									Delete
 								</ThemedText>
 							</ThemedTouchableOpacity>
+							<Link
+								href={{
+									pathname: "/(dashboard)/goal-details/[id]",
+									params: { id: item.id },
+								}}
+								asChild
+							>
+								<ThemedTouchableOpacity
+									style={styles.editButton}
+								>
+									<ThemedText style={styles.buttonText}>
+										View
+									</ThemedText>
+								</ThemedTouchableOpacity>
+							</Link>
 						</ThemedView>
 					</ThemedView>
 				)}

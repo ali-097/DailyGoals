@@ -56,6 +56,12 @@ const _layout = () => {
 					),
 				}}
 			/>
+			<Tabs.Screen
+				name="goal-details/[id]"
+				options={{
+					href: null,
+				}}
+			/>
 		</Tabs>
 	);
 };

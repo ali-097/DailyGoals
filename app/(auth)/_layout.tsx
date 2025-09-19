@@ -1,4 +1,6 @@
-import { router, Stack } from "expo-router";
+import { router } from "expo-router";
+import { Stack } from "expo-router/stack";
+// import { Drawer } from "expo-router/drawer";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { useAuth } from "../hooks/useAuth";
@@ -34,6 +36,15 @@ const _layout = () => {
 				options={{ title: "Signup Form", headerLeft: () => null }}
 			/>
 		</Stack>
+		// <GestureHandlerRootView style={{ flex: 1 }}>
+		// 	<Drawer>
+		// 		<Drawer.Screen name="login" options={{ title: "Login Form" }} />
+		// 		<Drawer.Screen
+		// 			name="register"
+		// 			options={{ title: "Signup Form" }}
+		// 		/>
+		// 	</Drawer>
+		// </GestureHandlerRootView>
 	);
 };
 
