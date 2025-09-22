@@ -1,19 +1,11 @@
 import { Ionicons } from "@expo/vector-icons";
-import { router, Tabs } from "expo-router";
-import React, { useEffect } from "react";
+import { Tabs } from "expo-router";
+import React from "react";
 import { StyleSheet } from "react-native";
 import { useTheme } from "../context/themeContext";
-import { useAuth } from "../hooks/useAuth";
 
 const _layout = () => {
 	const { isDark } = useTheme();
-	const isAuthenticated = useAuth();
-
-	useEffect(() => {
-		if (isAuthenticated === false) {
-			router.replace("/(auth)/login");
-		}
-	}, [isAuthenticated]);
 
 	return (
 		<Tabs

@@ -3,10 +3,10 @@ import { Stack } from "expo-router/stack";
 // import { Drawer } from "expo-router/drawer";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { useAuth } from "../hooks/useAuth";
+import { useAuthStore } from "../store/authStore";
 
 const _layout = () => {
-	const isAuthenticated = useAuth();
+	const { isAuthenticated } = useAuthStore();
 
 	useEffect(() => {
 		if (isAuthenticated === true) {

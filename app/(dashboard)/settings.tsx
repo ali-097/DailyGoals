@@ -7,12 +7,13 @@ import {
 	ThemedView,
 	ThemeToggle,
 } from "../components";
-import { supabase } from "../lib/supabase";
+import { useAuthStore } from "../store/authStore";
 
 const settings = () => {
+	const { logout } = useAuthStore();
 	const signOut = async () => {
 		try {
-			await supabase.auth.signOut();
+			await logout();
 			router.replace("/(auth)/login");
 		} catch (error) {
 			console.log("Error signing out:", error);

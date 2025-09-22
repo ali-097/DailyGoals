@@ -1,10 +1,10 @@
 import { router } from "expo-router";
 import { useEffect } from "react";
 import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
-import { useAuth } from "./hooks/useAuth";
+import { useAuthStore } from "./store/authStore";
 
 export default function Index() {
-	const isAuthenticated = useAuth();
+	const { isAuthenticated } = useAuthStore();
 
 	useEffect(() => {
 		if (isAuthenticated === false) {

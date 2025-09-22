@@ -1,7 +1,7 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Modal, StyleSheet } from "react-native";
+import { Alert, Modal, StyleSheet } from "react-native";
 import {
 	ThemedText,
 	ThemedTextInput,
@@ -9,6 +9,7 @@ import {
 	ThemedView,
 } from "../components";
 import { supabase } from "../lib/supabase";
+import { useAuthStore } from "../store/authStore";
 import { Goal } from "../types/goal";
 
 const formatDate = (date: Date): string => {
@@ -21,6 +22,7 @@ const formatDate = (date: Date): string => {
 
 const goalForm = () => {
 	const { id } = useLocalSearchParams();
+	const { user_id } = useAuthStore();
 	const [formData, setFormData] = useState<Goal>({
 		title: "",
 		description: "",
@@ -56,7 +58,14 @@ const goalForm = () => {
 	};
 
 	const handleGoalSubmit = async () => {
-		const user = await supabase.auth.getUser();
+		if (!user_id) {
+			Alert.alert("User not authenticated");
+			return;
+		}
+		if (!formData.title.trim()) {
+			Alert.alert("Please enter a goal title");
+			return;
+		}
 		let error;
 		if (id) {
 			const { error: updateError } = await supabase
@@ -76,7 +85,7 @@ const goalForm = () => {
 					description: formData.description,
 					deadline: formData.deadline.toISOString(),
 					priority: formData.priority,
-					user_id: user.data.user?.id,
+					user_id: user_id,
 				},
 			]);
 			error = insertError;

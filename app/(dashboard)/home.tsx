@@ -116,7 +116,7 @@ const goals = () => {
 								asChild
 							>
 								<ThemedTouchableOpacity
-									style={styles.editButton}
+									style={styles.viewButton}
 								>
 									<ThemedText style={styles.buttonText}>
 										View
@@ -177,11 +177,19 @@ const styles = StyleSheet.create({
 		paddingVertical: 8,
 		paddingHorizontal: 16,
 		borderRadius: 6,
+		backgroundColor: "#0014f1e1",
+	},
+	viewButton: {
+		paddingVertical: 8,
+		paddingHorizontal: 16,
+		borderRadius: 6,
+		backgroundColor: "#34C759",
 	},
 	deleteButton: {
 		paddingVertical: 8,
 		paddingHorizontal: 16,
 		borderRadius: 6,
+		backgroundColor: "#f44336",
 	},
 	buttonText: {
 		fontWeight: "bold",

@@ -65,7 +65,6 @@ const Register = () => {
 
 	const handleSubmit = async () => {
 		if (validateForm()) {
-			console.log(supabase);
 			const { data, error } = await supabase.auth.signUp({
 				email: formData.email,
 				password: formData.password,
@@ -79,7 +78,7 @@ const Register = () => {
 				console.error("Error during sign up:", error.message);
 				return;
 			}
-			console.log("User signed up successfully:", data);
+			console.log("User signed up successfully");
 			console.log("Form submitted:", formData);
 			router.push("/");
 		}

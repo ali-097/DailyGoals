@@ -13,7 +13,7 @@ import {
 	ThemedView,
 } from "../components";
 import { useTheme } from "../context/themeContext";
-import { supabase } from "../lib/supabase";
+import { useAuthStore } from "../store/authStore";
 
 interface LoginForm {
 	email: string;
@@ -21,6 +21,7 @@ interface LoginForm {
 }
 
 const Login = () => {
+	const { login } = useAuthStore();
 	const { isDark } = useTheme();
 	const [formData, setFormData] = useState<LoginForm>({
 		email: "",
@@ -49,17 +50,21 @@ const Login = () => {
 
 	const handleSubmit = async () => {
 		if (validateForm()) {
-			const { data, error } = await supabase.auth.signInWithPassword({
-				email: formData.email,
-				password: formData.password,
-			});
-			if (error) {
-				console.log("Error logging in:", error.message);
-				setErrors({ password: error.message });
-				return;
+			try {
+				const { error } = await login(
+					formData.email,
+					formData.password
+				);
+				if (error) {
+					setErrors({
+						password: "Invalid email or password",
+					});
+				} else {
+					router.replace("/(dashboard)/home");
+				}
+			} catch (error) {
+				console.log("Error logging in:", error);
 			}
-			console.log("Login successful:", data);
-			router.push("/(dashboard)/home");
 		}
 	};
 
