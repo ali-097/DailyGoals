@@ -1,5 +1,5 @@
-import { Link } from "expo-router";
-import { useEffect, useState } from "react";
+import { Link, useFocusEffect } from "expo-router";
+import { useCallback, useState } from "react";
 import { Alert, FlatList, StyleSheet } from "react-native";
 import { ThemedText, ThemedTouchableOpacity, ThemedView } from "../components";
 import { supabase } from "../lib/supabase";
@@ -12,21 +12,27 @@ interface Goals extends Goal {
 
 const goals = () => {
 	const [goalList, setGoalList] = useState<Goals[]>([]);
-	useEffect(() => {
-		const fetchData = async () => {
-			const res = await supabase
-				.from("goals")
-				.select("*")
-				.order("created_at", { ascending: false });
-			const goalsData = res.data;
-			if (goalsData) {
-				setGoalList(
-					goalsData.map(({ created_at, user_id, ...rest }) => rest)
-				);
-			}
-		};
-		fetchData();
-	}, []);
+	const fetchData = async () => {
+		const res = await supabase
+			.from("goals")
+			.select("*")
+			.order("created_at", { ascending: false });
+		const goalsData = res.data;
+		if (goalsData) {
+			setGoalList(
+				goalsData.map(({ created_at, user_id, ...rest }) => rest)
+			);
+		}
+	};
+	// useEffect(() => {
+	// 	fetchData();
+	// }, []);
+
+	useFocusEffect(
+		useCallback(() => {
+			fetchData();
+		}, [])
+	);
 
 	const deleteGoal = async (id: number) => {
 		const { error } = await supabase.from("goals").delete().eq("id", id);
@@ -136,7 +142,7 @@ export default goals;
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		paddingVertical: 70,
+		paddingTop: 70,
 		paddingHorizontal: 30,
 	},
 	addButton: {
