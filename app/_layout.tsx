@@ -1,9 +1,20 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import NetInfo from "@react-native-community/netinfo";
+import * as Notifications from "expo-notifications";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { ThemedText, ThemedView } from "./components";
 import ThemeProvider from "./context/themeContext";
 import { useAuthStore } from "./store/authStore";
+
+Notifications.setNotificationHandler({
+	handleNotification: async () => ({
+		shouldPlaySound: false,
+		shouldSetBadge: false,
+		shouldShowBanner: true,
+		shouldShowList: true,
+	}),
+});
 
 export default function RootLayout() {
 	const { isAuthenticated } = useAuthStore();
@@ -15,6 +26,24 @@ export default function RootLayout() {
 			setIsLayoutReady(true);
 		}, 100);
 		return () => clearTimeout(timer);
+	}, []);
+
+	useEffect(() => {
+		const checkRequestPermissions = async () => {
+			const { status } = await Notifications.getPermissionsAsync();
+
+			if (status !== "granted") {
+				const check_status =
+					await Notifications.requestPermissionsAsync();
+				if (check_status.status == "granted") {
+					await AsyncStorage.setItem(
+						"notificationPermission",
+						"granted"
+					);
+				}
+			}
+		};
+		checkRequestPermissions();
 	}, []);
 
 	useEffect(() => {

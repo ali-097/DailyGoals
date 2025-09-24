@@ -1,5 +1,8 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import { router } from "expo-router";
-import { StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { AppState, Linking, Platform, StyleSheet } from "react-native";
 import {
 	ThemedIcon,
 	ThemedText,
@@ -11,12 +14,39 @@ import { useAuthStore } from "../store/authStore";
 
 const settings = () => {
 	const { logout } = useAuthStore();
+	const [notificationEnabled, setNotificationEnabled] = useState(false);
+
+	useEffect(() => {
+		const subscription = AppState.addEventListener(
+			"change",
+			async (nextAppState) => {
+				if (nextAppState === "active") {
+					const permissions =
+						await Notifications.getPermissionsAsync();
+					setNotificationEnabled(permissions.status === "granted");
+				}
+			}
+		);
+
+		return () => subscription.remove();
+	}, []);
+
 	const signOut = async () => {
 		try {
 			await logout();
 			router.replace("/(auth)/login");
 		} catch (error) {
 			console.log("Error signing out:", error);
+		}
+	};
+	const toggleNotifications = async () => {
+		const currentStatus = await AsyncStorage.getItem(
+			"notificationPermission"
+		);
+		if (currentStatus === "granted") {
+			await AsyncStorage.setItem("notificationPermission", "denied");
+		} else {
+			await AsyncStorage.setItem("notificationPermission", "granted");
 		}
 	};
 
@@ -52,6 +82,56 @@ const settings = () => {
 					</ThemedView>
 				</ThemedView>
 
+				<ThemedView style={styles.section}>
+					<ThemedText style={styles.sectionTitle}>
+						Notifications
+					</ThemedText>
+					<ThemedView style={styles.settingItem}>
+						<ThemedView style={styles.settingInfo}>
+							<ThemedIcon
+								name="notifications-outline"
+								size={24}
+								color="textSecondary"
+							/>
+							<ThemedView style={styles.settingText}>
+								<ThemedText style={styles.settingLabel}>
+									Goal Reminders
+								</ThemedText>
+								<ThemedText style={styles.settingDescription}>
+									Receive notifications for goal deadlines
+								</ThemedText>
+							</ThemedView>
+						</ThemedView>
+						{notificationEnabled ? (
+							<ThemedText
+								onPress={() => {
+									if (Platform.OS === "android") {
+										Linking.openSettings();
+									} else {
+										Linking.openURL("app-settings:");
+									}
+								}}
+							>
+								Enabled
+							</ThemedText>
+						) : (
+							<ThemedTouchableOpacity
+								onPress={() => {
+									if (Platform.OS === "android") {
+										Linking.openSettings();
+									} else {
+										Linking.openURL("app-settings:");
+									}
+								}}
+								style={styles.enableButton}
+							>
+								<ThemedText style={styles.enableButtonText}>
+									Enable
+								</ThemedText>
+							</ThemedTouchableOpacity>
+						)}
+					</ThemedView>
+				</ThemedView>
 				<ThemedView style={styles.section}>
 					<ThemedText style={styles.sectionTitle}>Account</ThemedText>
 					<ThemedTouchableOpacity
@@ -166,5 +246,16 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: "500",
 		marginBottom: 4,
+	},
+	enableButton: {
+		paddingVertical: 8,
+		paddingHorizontal: 16,
+		borderRadius: 8,
+		backgroundColor: "#007AFF",
+	},
+	enableButtonText: {
+		color: "#FFFFFF",
+		fontSize: 14,
+		fontWeight: "500",
 	},
 });

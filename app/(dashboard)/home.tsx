@@ -1,5 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Notifications from "expo-notifications";
 import { Link, useFocusEffect } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, StyleSheet } from "react-native";
 import { ThemedText, ThemedTouchableOpacity, ThemedView } from "../components";
 import { supabase } from "../lib/supabase";
@@ -33,6 +35,26 @@ const goals = () => {
 			fetchData();
 		}, [])
 	);
+
+	useEffect(() => {
+		const sendMockNotification = async () => {
+			const permission = await AsyncStorage.getItem(
+				"notificationPermission"
+			);
+			if (permission !== "granted") {
+				return;
+			}
+			await Notifications.scheduleNotificationAsync({
+				content: {
+					title: "Reminder",
+					body: "Don't forget to check your goals today!",
+					data: { screen: "Home" },
+				},
+				trigger: null,
+			});
+		};
+		sendMockNotification();
+	}, []);
 
 	const deleteGoal = async (id: number) => {
 		const { error } = await supabase.from("goals").delete().eq("id", id);
